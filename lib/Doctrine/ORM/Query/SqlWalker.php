@@ -1000,18 +1000,18 @@ class SqlWalker implements TreeWalker
 
         if ($targetClass->isInheritanceTypeJoined()) {
             $ctiJoins = $this->_generateClassTableInheritanceJoins($targetClass, $joinedDqlAlias);
-            // If we have WITH condition, we need to build nested joins for target class table and cti joins
+
             if ($withCondition) {
-                $sql .= '(' . $targetTableJoin['table'] . $ctiJoins . ') ON ' . $targetTableJoin['condition'];
+                $sql .= $targetTableJoin['table'] . ' ON ' . $targetTableJoin['condition'] .  ' AND ' . $withCondition . $ctiJoins;
             } else {
                 $sql .= $targetTableJoin['table'] . ' ON ' . $targetTableJoin['condition'] . $ctiJoins;
             }
         } else {
             $sql .= $targetTableJoin['table'] . ' ON ' . $targetTableJoin['condition'];
-        }
 
-        if ($withCondition) {
-            $sql .= ' AND ' . $withCondition;
+            if ($withCondition) {
+                $sql .= ' AND ' . $withCondition;
+            }
         }
 
         // Apply the indexes
